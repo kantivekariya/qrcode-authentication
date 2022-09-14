@@ -5,6 +5,14 @@
 dist
 build
 
+## 
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
 ### macOS ###
 # General
 .DS_Store
