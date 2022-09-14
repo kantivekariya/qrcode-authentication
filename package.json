@@ -1,0 +1,36 @@
+{
+  "name": "es6express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "server": "cross-env DEBUG=app nodemon --es-module-specifier-resolution=node app.js",
+    "dev": "env-cmd -e development cross-env npm-run-all server",
+    "prod": "env-cmd -e production cross-env npm-run-all server",
+    "staging": "env-cmd -e staging cross-env npm-run-all server",
+    "format": "prettier --write \"./**/*.js\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.2",
+    "cross-env": "^7.0.3",
+    "crypto-js": "^4.1.1",
+    "debug": "^4.3.3",
+    "env-cmd": "^10.1.0",
+    "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.2.2",
+    "morgan": "^1.10.0",
+    "qrcode": "^1.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.5.1",
+    "rimraf": "^3.0.2"
+  }
+}
