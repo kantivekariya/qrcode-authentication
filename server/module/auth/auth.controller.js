@@ -121,22 +121,28 @@ userController.delete = async (req, res) => {
 
 /* generate dynamic qr code */
 userController.qrcode = async (req, res) => {
-  const randomString = (length) =>
-    [...Array(length)]
-      .map(() => (~~(Math.random() * 36)).toString(36))
-      .join("");
-  const dynamicToken = jwt.sign(
-    { sub: randomString(14) },
-    process.env.NODE_JWT_KEY,
-    {
-      expiresIn: process.env.NODE_JWT_EXPIRATION,
-    }
-  );
-  const dynamicOrCode = await new qrCodeModel({ qrcode: dynamicToken });
-  await dynamicOrCode.save();
-  QRCode.toDataURL(dynamicToken, (err, url) => {
-    res.send({ qrcode: url });
-  });
+  try {
+    const randomString = (length) =>
+      [...Array(length)]
+        .map(() => (~~(Math.random() * 36)).toString(36))
+        .join("");
+    const dynamicToken = jwt.sign(
+      { sub: randomString(14) },
+      process.env.NODE_JWT_KEY,
+      {
+        expiresIn: process.env.NODE_JWT_EXPIRATION,
+      }
+    );
+    const dynamicOrCode = await new qrCodeModel({ qrcode: dynamicToken });
+    await dynamicOrCode.save();
+    QRCode.toDataURL(dynamicToken, (err, url) => {
+      res.send({
+        qrcode: url,
+      });
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error.toString() });
+  }
 };
 
 export default userController;

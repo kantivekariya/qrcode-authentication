@@ -24,9 +24,8 @@ instance.interceptors.request.use(
     }
 
     /* Store or update application token */
-    const axiosSource = axios.CancelToken.source();
-    sourceRequest[request.url] = { cancel: axiosSource.cancel };
-    request.cancelToken = axiosSource.token;
+    const controller = new AbortController();
+    controller.abort()
 
     return request;
   },
