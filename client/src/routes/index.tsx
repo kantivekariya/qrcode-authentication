@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import Login from "../components/auth/Login";
+import QrCode from "../components/auth/QrCode";
 import SignUp from "../components/auth/SignUp";
 import Dashboard from "../components/dashboard/Dashboard";
 import UserProfile from "../components/dashboard/UserProfile";
@@ -12,7 +13,7 @@ const RootRoutes = () => {
     const cb = () => {
       const isToken = localStorage.getItem("user");
       if (!isToken) {
-        navigate("/login");
+        navigate("/qr-code");
       }
     };
     window.addEventListener("storage", cb);
@@ -24,6 +25,7 @@ const RootRoutes = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/qr-code" element={<QrCode />} />
       <Route path="/register" element={<SignUp />} />
       <Route path="/" element={<PrivateRoute />}>
         <Route index element={<Dashboard />} />
