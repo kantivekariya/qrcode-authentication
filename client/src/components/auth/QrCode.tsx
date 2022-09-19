@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Loader from "../../common/Loader";
 import { generateQrCode } from "../../reduce/action/auth/AuthAction";
@@ -38,4 +38,4 @@ const QrCode = () => {
   );
 };
 
-export default QrCode;
+export default memo(QrCode);

@@ -41,6 +41,8 @@ userController.login = async (req, res, next) => {
       const token = jwt.sign({ sub: user.id }, process.env.NODE_JWT_KEY, {
         expiresIn: process.env.NODE_JWT_EXPIRATION,
       });
+      user.token = token;
+      await user.save();
       return res.status(httpStatus.OK).json({
         message: "Auth successful",
         token: token,
@@ -142,6 +144,21 @@ userController.qrcode = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({ error: error.toString() });
+  }
+};
+
+/* user logout */
+userController.logout = async (req, res) => {
+  try {
+    req.user.deleteToken(req.token, (err, user) => {
+      if (err) return res.status(httpStatus.BAD_REQUEST).send(err);
+      return res.status(httpStatus.OK).json({ message: "Logout Successfully!" });
+    });
+  } catch (e) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      status: "ERROR",
+      message: e.message,
+    });
   }
 };
 

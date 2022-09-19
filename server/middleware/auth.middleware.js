@@ -9,7 +9,7 @@ const auth = async (req, res, next) => {
       const user = await UserModel.findOne({
         _id: decoded.sub,
       });
-      if (!user) {
+      if (!user?.token) {
         return res.status(401).send({
           status: "ERROR",
           message: "Auth-Token is not valid",

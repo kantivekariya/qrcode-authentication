@@ -31,7 +31,17 @@ const userSchema = new schema({
     type: String,
     required: true,
   },
+  token: {
+    type: String,
+  },
 });
 
+userSchema.methods.deleteToken = function (token, cb) {
+  let user = this;
+  user.update({ $unset: { token: 1 } }, function (err, user) {
+    if (err) return cb(err);
+    cb(null, user);
+  });
+};
 const UserModel = mongoose.model("user", userSchema);
 export { UserModel };
