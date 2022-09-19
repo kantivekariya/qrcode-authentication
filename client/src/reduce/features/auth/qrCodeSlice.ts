@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthIProps {
-  qrcode: any;
+  qrCode: any;
   status: string;
   isLoading: boolean;
   error?: string;
@@ -9,13 +9,13 @@ interface AuthIProps {
 
 const initialState = {
   isLoading: true,
-  qrcode: {},
+  qrCode: {},
   error: "",
   status: "",
 } as AuthIProps;
 
-const userAuthSlice = createSlice({
-  name: "user",
+const qrCodeSlice = createSlice({
+  name: "qrCode",
   initialState,
   reducers: {
     qrCodeLoading(state) {
@@ -24,7 +24,7 @@ const userAuthSlice = createSlice({
     qrCodeSuccess(state, action: PayloadAction<{}>) {
       state.isLoading = false;
       state.status = "Success";
-      state.qrcode = action.payload;
+      state.qrCode = action.payload;
     },
     qrCodeFailure(state, action: PayloadAction<string>) {
       state.isLoading = false;
@@ -35,6 +35,6 @@ const userAuthSlice = createSlice({
 });
 
 export const { qrCodeLoading, qrCodeSuccess, qrCodeFailure } =
-  userAuthSlice.actions;
+  qrCodeSlice.actions;
 
-export default userAuthSlice.reducer;
+export default qrCodeSlice.reducer;

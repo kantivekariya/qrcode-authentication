@@ -122,7 +122,7 @@ userController.delete = async (req, res) => {
 };
 
 /* generate dynamic qr code */
-userController.qrcode = async (req, res) => {
+userController.qrCode = async (req, res) => {
   try {
     const randomString = (length) =>
       [...Array(length)]
@@ -139,7 +139,7 @@ userController.qrcode = async (req, res) => {
     await dynamicOrCode.save();
     QRCode.toDataURL(dynamicToken, (err, url) => {
       res.send({
-        qrcode: url,
+        qrCode: url,
       });
     });
   } catch (error) {

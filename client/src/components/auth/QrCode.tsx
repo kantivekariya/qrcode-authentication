@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../utils/dispatchHooks";
 
 const QrCode = () => {
   const dispatch = useAppDispatch();
-  const { qrcode, isLoading } = useAppSelector((state) => state.auth);
+  const { qrCode, isLoading } = useAppSelector((state) => state.qrCode);
 
   useEffect(() => {
     dispatch(generateQrCode());
@@ -23,7 +23,7 @@ const QrCode = () => {
                 <Loader />
               </div>
             ) : (
-              <img src={qrcode?.qrcode} alt="qr-code" />
+              <img src={qrCode?.qrCode} alt="qr-code" />
             )}
           </div>
           <div>

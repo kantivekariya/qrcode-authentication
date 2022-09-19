@@ -1,8 +1,8 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import userAuthSlice from "../features/auth/authSlice";
+import qrCodeSlice from "../features/auth/qrCodeSlice";
 
 const rootReducer = combineReducers({
-  auth: userAuthSlice,
+  qrCode: qrCodeSlice,
 });
 
 export default rootReducer;
