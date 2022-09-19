@@ -30,4 +30,7 @@ authRoutes.delete("/users/:userId", auth, asyncWrapper(userController.delete));
 /* generate dynamic qr-code */
 authRoutes.get("/qr-code", asyncWrapper(userController.qrcode));
 
+/* verify token qr-code */
+authRoutes.post("/verify-qrcode", asyncWrapper(userController.verifyQrcode));
+
 export { authRoutes };

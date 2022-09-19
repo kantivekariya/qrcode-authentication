@@ -145,4 +145,30 @@ userController.qrcode = async (req, res) => {
   }
 };
 
+/* verify token */
+userController.verifyQrcode = async (req, res) => {
+  try {
+    const { userId, qrcodeToken } = req.body;
+    const userToken = await qrCodeModel.findOne({ qrcode: qrcodeToken });
+    if (userToken && userId) {
+      const token = jwt.sign({ sub: userId }, process.env.NODE_JWT_KEY, {
+        expiresIn: process.env.NODE_JWT_EXPIRATION,
+      });
+      return res.status(httpStatus.OK).json({
+        message: "Auth successful",
+        token: token,
+      });
+    } else {
+      return res.status(httpStatus.UNAUTHORIZED).json({
+        message: "Auth failed!",
+      });
+    }
+  } catch (e) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      status: "ERROR",
+      message: e.message,
+    });
+  }
+};
+
 export default userController;
