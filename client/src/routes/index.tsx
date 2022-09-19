@@ -5,13 +5,14 @@ import QrCode from "../components/auth/QrCode";
 import SignUp from "../components/auth/SignUp";
 import Dashboard from "../components/dashboard/Dashboard";
 import UserProfile from "../components/dashboard/UserProfile";
+import { getLocalState } from "../utils/helpers";
 import PrivateRoute from "./PrivateRoute";
 
 const RootRoutes = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const cb = () => {
-      const isToken = localStorage.getItem("user");
+      const isToken = getLocalState("access_token");
       if (!isToken) {
         navigate("/qr-code");
       }

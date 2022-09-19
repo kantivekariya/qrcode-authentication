@@ -2,6 +2,9 @@ import { Formik } from "formik";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import { LoginIProps, userLogin } from "../../reduce/action/auth/AuthAction";
+import { useAppDispatch } from "../../utils/dispatchHooks";
+import { getLocalState } from "../../utils/helpers";
 
 const loginSchema = Yup.object()
   .shape({
@@ -15,7 +18,8 @@ const loginSchema = Yup.object()
 
 const Login = () => {
   const navigate = useNavigate();
-  const isAuth = localStorage.getItem("user");
+  const dispatch = useAppDispatch();
+  const isAuth = getLocalState("access_token");
 
   useEffect(() => {
     if (isAuth) {
@@ -23,9 +27,9 @@ const Login = () => {
     }
   }, [navigate, isAuth]);
 
-  const onHandleSubmit = (formData: { email: string; password: string }) => {
-    localStorage.setItem("user", JSON.stringify(formData));
-    navigate("/");
+  const onHandleSubmit = async (formData: LoginIProps) => {
+    await dispatch(userLogin(formData));
+    await navigate("/");
   };
 
   return (

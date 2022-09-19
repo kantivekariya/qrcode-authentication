@@ -39,8 +39,12 @@ const SignUp = () => {
           </h3>
           <Formik
             initialValues={{
-              name: "",
+              firstName: "",
+              lastName: "",
               email: "",
+              country: "",
+              address: "",
+              phone: "",
               password: "",
               confirmPassword: "",
             }}
@@ -57,24 +61,45 @@ const SignUp = () => {
             }) => (
               <form onSubmit={handleSubmit}>
                 <div className="mt-4">
-                  <div>
-                    <label className="block" htmlFor="email">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Name"
-                      name="name"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.name}
-                      className="mb-2 w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                    />
-                    {errors.name && touched.name && (
-                      <span className="text-red-600 text-sm w-full block">
-                        {errors.name}
-                      </span>
-                    )}
+                  <div className="flex">
+                    <div className="mr-4">
+                      <label className="block" htmlFor="email">
+                        First Name
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="First Name"
+                        name="firstName"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.firstName}
+                        className="mb-2 w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                      />
+                      {errors.firstName && touched.firstName && (
+                        <span className="text-red-600 text-sm w-full block">
+                          {errors.firstName}
+                        </span>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block" htmlFor="email">
+                        Last Name
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Last Name"
+                        name="lastName"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.lastName}
+                        className="mb-2 w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                      />
+                      {errors.lastName && touched.lastName && (
+                        <span className="text-red-600 text-sm w-full block">
+                          {errors.lastName}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <div>
                     <label className="block" htmlFor="email">
