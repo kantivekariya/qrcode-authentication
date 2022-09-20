@@ -2,7 +2,10 @@ import { memo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Loader from "../../common/Loader";
 import { generateQrCode } from "../../reduce/action/auth/AuthAction";
-import { useAppDispatch, useAppSelector } from "../../utils/dispatchHooks";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../utils/hooks/dispatchHooks";
 
 const QrCode = () => {
   const dispatch = useAppDispatch();

@@ -1,7 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { loadUserFromLocal } from "../../../utils/helpers";
+const persistedState = loadUserFromLocal();
 
 interface AuthIProps {
   userInfo: any;
+  isAuthenticated: boolean;
   status: string;
   isLoading: boolean;
   error?: string;
@@ -14,9 +17,13 @@ const initialState = {
   status: "",
 } as AuthIProps;
 
+let initObjects = Object.assign(persistedState, initialState);
+
+console.log("persistedState", initObjects);
+
 const authSlice = createSlice({
   name: "auth",
-  initialState,
+  initObjects,
   reducers: {
     loginUserLoading(state) {
       state.status = "Pending";

@@ -18,6 +18,9 @@ authRoutes.post("/login", asyncWrapper(userController.login));
 /* get all users */
 authRoutes.get("/users", auth, asyncWrapper(userController.findAll));
 
+/* login user details */
+authRoutes.get("/me", auth, asyncWrapper(userController.me));
+
 /* get user by id */
 authRoutes.get("/users/:userId", auth, asyncWrapper(userController.findOne));
 

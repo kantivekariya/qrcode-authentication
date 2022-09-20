@@ -10,6 +10,7 @@ import PrivateRoute from "./PrivateRoute";
 
 const RootRoutes = () => {
   const navigate = useNavigate();
+
   useEffect(() => {
     const cb = () => {
       const isToken = getLocalState("access_token");
@@ -23,6 +24,14 @@ const RootRoutes = () => {
       window.removeEventListener("storage", cb);
     };
   }, []);
+
+  useEffect(() => {
+    const isAuth = getLocalState("access_token");
+    if (isAuth) {
+      navigate("/", { replace: true });
+    }
+  }, [navigate]);
+
   return (
     <Routes>
       <Route path="/login" element={<Login />} />

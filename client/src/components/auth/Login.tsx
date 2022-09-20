@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { LoginIProps, userLogin } from "../../reduce/action/auth/AuthAction";
-import { useAppDispatch } from "../../utils/dispatchHooks";
+import { useAppDispatch } from "../../utils/hooks/dispatchHooks";
 import { getLocalState } from "../../utils/helpers";
 
 const loginSchema = Yup.object()
@@ -19,13 +19,6 @@ const loginSchema = Yup.object()
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const isAuth = getLocalState("access_token");
-
-  useEffect(() => {
-    if (isAuth) {
-      navigate("/", { replace: true });
-    }
-  }, [navigate, isAuth]);
 
   const onHandleSubmit = async (formData: LoginIProps) => {
     await dispatch(userLogin(formData));

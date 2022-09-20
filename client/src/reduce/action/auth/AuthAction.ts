@@ -11,13 +11,18 @@ import {
   qrCodeLoading,
   qrCodeSuccess,
 } from "../../features/auth/qrCodeSlice";
+import {
+  signUpFailure,
+  signUpLoading,
+  signUpSuccess,
+} from "../../features/auth/signUpSlice";
 
 export interface LoginIProps {
   email: string;
   password: string;
 }
 
-export interface RegistrationIProps {
+export interface SignUpIProps {
   firstName: string;
   lastName: string;
   email: string;
@@ -27,6 +32,7 @@ export interface RegistrationIProps {
   password: string;
 }
 
+/* generate qrCode api's */
 export const generateQrCode = () => async (dispatch: any) => {
   dispatch(qrCodeLoading());
   try {
@@ -38,6 +44,7 @@ export const generateQrCode = () => async (dispatch: any) => {
   }
 };
 
+/* user login api's */
 export const userLogin = (apiData: LoginIProps) => async (dispatch: any) => {
   dispatch(loginUserLoading());
   try {
@@ -48,6 +55,30 @@ export const userLogin = (apiData: LoginIProps) => async (dispatch: any) => {
     dispatch(loginUserSuccess(res.data));
   } catch (error) {
     dispatch(loginUserFailure(error as string));
+    return Promise.reject(error);
+  }
+};
+
+/* user signup api's */
+export const userSignUp = (apiData: SignUpIProps) => async (dispatch: any) => {
+  dispatch(signUpLoading());
+  try {
+    const res = await AuthApiServices.userSignUp(apiData);
+    dispatch(signUpSuccess(res.data));
+  } catch (error) {
+    dispatch(signUpFailure(error as string));
+    return Promise.reject(error);
+  }
+};
+
+/* user signup api's */
+export const getUserProfile = () => async (dispatch: any) => {
+  dispatch(signUpLoading());
+  try {
+    // const res = await AuthApiServices.userSignUp();
+    // dispatch(signUpSuccess(res.data));
+  } catch (error) {
+    dispatch(signUpFailure(error as string));
     return Promise.reject(error);
   }
 };
@@ -64,18 +95,22 @@ export const saveTokens = (params: {
   setLocalState("access_token", access_token);
 };
 
-// export const onLocalLogin = () => {
-//   return (dispatch: any) => {
-//     const _expiresAt = getLocalState("expires_at");
-//     const access_token = getLocalState("access_token");
-//     if (_expiresAt && access_token && new Date().getTime() < _expiresAt) {
-//       // authorize
-//       console.log("onLocalLogin - authorize");
-//       return dispatch(getUserProfile());
-//     } else {
-//       //unauth
-//       console.log("onLocalLogin - unauth");
-//       localStorage.clear();
-//     }
-//   };
-// };
+export const onLocalLogin = () => {
+  return (dispatch: any) => {
+    const _expiresAt = getLocalState("expires_at");
+    const access_token = getLocalState("access_token");
+    if (
+      _expiresAt &&
+      access_token &&
+      new Date().getTime() < parseInt(_expiresAt)
+    ) {
+      // authorize
+      console.log("onLocalLogin - authorize");
+      return dispatch(getUserProfile());
+    } else {
+      //unauth
+      console.log("onLocalLogin - unauth");
+      localStorage.clear();
+    }
+  };
+};

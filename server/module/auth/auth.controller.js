@@ -72,6 +72,20 @@ userController.findAll = async (req, res) => {
   }
 };
 
+/* auth login user */
+userController.me = async (req, res) => {
+  return res.json({
+    data: {
+      firstName: req.user.firstName,
+      lastName: req.user.lastName,
+      email: req.user.email,
+      phone: req.user.phone,
+      country: req.user.country,
+      address: req.user.address,
+    },
+  });
+};
+
 /* get user by id */
 userController.findOne = async (req, res) => {
   try {
@@ -152,7 +166,9 @@ userController.logout = async (req, res) => {
   try {
     req.user.deleteToken(req.token, (err, user) => {
       if (err) return res.status(httpStatus.BAD_REQUEST).send(err);
-      return res.status(httpStatus.OK).json({ message: "Logout Successfully!" });
+      return res
+        .status(httpStatus.OK)
+        .json({ message: "Logout Successfully!" });
     });
   } catch (e) {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
