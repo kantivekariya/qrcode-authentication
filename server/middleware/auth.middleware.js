@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { UserModel } from "../module/auth/auth.model";
 import config from "../config";
+import httpStatus from "../utils/httpStatus";
 
 const auth = async (req, res, next) => {
   const token = req.header("authorization");
@@ -12,7 +13,7 @@ const auth = async (req, res, next) => {
         "tokens.token": token,
       });
       if (!user) {
-        return res.status(401).send({
+        return res.status(httpStatus.UNAUTHORIZED).send({
           status: "ERROR",
           message: "Auth-Token is not valid",
         });
@@ -21,13 +22,13 @@ const auth = async (req, res, next) => {
       req.user = user;
       next();
     } catch (e) {
-      return res.status(401).send({
+      return res.status(httpStatus.UNAUTHORIZED).send({
         status: "ERROR",
         message: "Auth-Token is not valid",
       });
     }
   } else {
-    return res.status(401).send({
+    return res.status(httpStatus.UNAUTHORIZED).send({
       status: "ERROR",
       message: "Auth-Token not set in header",
     });

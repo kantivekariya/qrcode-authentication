@@ -37,6 +37,10 @@ authRoutes.get("/logout", auth, asyncWrapper(userController.logout));
 authRoutes.get("/qr-code", asyncWrapper(userController.qrCode));
 
 /* verify token qr-code */
-authRoutes.post("/verify-qrcode", asyncWrapper(userController.verifyQrcode));
+authRoutes.post(
+  "/verify-qrcode",
+  auth,
+  asyncWrapper(userController.verifyQrcode)
+);
 
 export { authRoutes };

@@ -172,21 +172,22 @@ userController.logout = async (req, res) => {
 /* verify token */
 userController.verifyQrcode = async (req, res) => {
   try {
-    const { userId, qrcodeToken } = req.body;
-    const userToken = await qrCodeModel.findOne({ qrcode: qrcodeToken });
-    if (userToken && userId) {
-      const token = jwt.sign({ sub: userId }, config.jwt.key, {
-        expiresIn: config.jwt.expiration,
-      });
+    const { qrCodeToken } = req.body;
+
+    const userToken = await qrCodeModel.findOne({ qrcode: qrCodeToken });
+
+    if (userToken) {
+      // TODO : create and send token to client-browser using socket
+      // const token = await req.user.generateAuthToken();
+
       return res.status(httpStatus.OK).json({
-        message: "Auth successful",
-        token: token,
-      });
-    } else {
-      return res.status(httpStatus.UNAUTHORIZED).json({
-        message: "Auth failed!",
+        message: "Successfully login on <device>",
+        status: "SUCCESS",
       });
     }
+    return res.status(httpStatus.BAD_REQUEST).json({
+      message: "QR code is invalid",
+    });
   } catch (e) {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       status: "ERROR",
