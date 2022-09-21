@@ -38,14 +38,11 @@ userController.login = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await UserModel.findOne({ email: email });
     if (user && bcrypt.compareSync(password, user.password)) {
-      const token = jwt.sign({ sub: user.id }, process.env.NODE_JWT_KEY, {
-        expiresIn: process.env.NODE_JWT_EXPIRATION,
-      });
-      user.token = token;
-      await user.save();
+      const token = await user.generateAuthToken();
       return res.status(httpStatus.OK).json({
         message: "Auth successful",
         token: token,
+        user,
       });
     } else {
       return res.status(httpStatus.UNAUTHORIZED).json({
@@ -164,12 +161,12 @@ userController.qrCode = async (req, res) => {
 /* user logout */
 userController.logout = async (req, res) => {
   try {
-    req.user.deleteToken(req.token, (err, user) => {
-      if (err) return res.status(httpStatus.BAD_REQUEST).send(err);
-      return res
-        .status(httpStatus.OK)
-        .json({ message: "Logout Successfully!" });
-    });
+    req.user.tokens = req.user.tokens.filter(
+      (token) => token.token != req.token
+    );
+    await req.user.save();
+
+    return res.status(httpStatus.OK).json({ message: "Logout Successfully!" });
   } catch (e) {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       status: "ERROR",
