@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import debug from "debug";
+import config from "../config";
 
 const log = debug("app");
 
@@ -26,20 +27,14 @@ mongoose.connection.on("error", (error) => {
   process.exit(1);
 });
 
-mongoose.set("debug", process.env.NODE_MONGO_DEBUG);
+mongoose.set("debug", config.database.debugEnabled);
 
 const connectMongo = async () => {
-  const dbOptions = {
-    autoIndex: false,
-    maxPoolSize: 10,
-    serverSelectionTimeoutMS: 5000,
-    socketTimeoutMS: 45000,
-    family: 4,
-  };
-  let connectionUri = process.env.NODE_DB_BASE_URL;
-  await mongoose.connect(connectionUri, dbOptions).catch((err) => {
-    Logger.log.fatal(`DATABASE - Error:${err}`);
-  });
+  await mongoose
+    .connect(config.database.connectionUrl, config.database.dbOptions)
+    .catch((err) => {
+      Logger.log.fatal(`DATABASE - Error:${err}`);
+    });
 };
 
 export default connectMongo;
