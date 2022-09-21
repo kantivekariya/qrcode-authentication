@@ -8,8 +8,9 @@ const auth = async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.NODE_JWT_KEY);
       const user = await UserModel.findOne({
         _id: decoded.sub,
+        "tokens.token": token,
       });
-      if (!user?.token) {
+      if (!user) {
         return res.status(401).send({
           status: "ERROR",
           message: "Auth-Token is not valid",
