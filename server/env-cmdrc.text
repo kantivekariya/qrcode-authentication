@@ -2,6 +2,7 @@
   "development": {
     "PORT":8000,
     "NODE_ENV":"development",
+    "LOG_LEVEL":"all",
     "NODE_DB_BASE_URL": "mongodb://localhost:27017/authDemo",
     "NODE_JWT_KEY": "myS33!!creeeT",
     "NODE_JWT_EXPIRATION": "3d",
@@ -10,6 +11,7 @@
   "staging": {
     "NODE_ENV":"staging",
     "NODE_BASE_URL": "staging url",
+    "LOG_LEVEL":"info"
     "NODE_JWT_KEY": "myS33!!creeeT",
     "NODE_JWT_EXPIRATION": "3d",
     "NODE_MONGO_DEBUG": false
@@ -17,6 +19,7 @@
   "production": {
     "NODE_ENV":"production",
     "NODE_BASE_URL": "prod url",
+    "LOG_LEVEL":"error"
     "NODE_JWT_KEY": "myS33!!creeeT",
     "NODE_JWT_EXPIRATION": "3d",
     "NODE_MONGO_DEBUG": false

@@ -3,7 +3,7 @@ const config = {
     port: process.env.PORT || 8000,
     environment: process.env.NODE_ENV || "development",
     // socketPort: process.env.SOCKET_PORT || 3700,
-    // logLevel: process.env.LOG_LEVEL || "all",
+    logLevel: process.env.LOG_LEVEL || "all",
   },
   database: {
     connectionUrl:

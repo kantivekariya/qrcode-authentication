@@ -5,6 +5,7 @@ import cors from "cors";
 import mainRouter from "./routes";
 import connectMongo from "./config/mongoconnect";
 import config from "./config";
+import logger from "./services/logger";
 
 const app = express();
 
@@ -22,6 +23,6 @@ connectMongo();
 app.use("/", mainRouter);
 
 app.listen(config.server.port, () => {
-  console.log(`Server is running on isProduction => ${isProduction}`);
-  console.log(`Server is running on PORT ${config.server.port}`);
+  logger.info(`Server is running on isProduction => ${isProduction}`);
+  logger.info(`🚀🚀 Server is running on PORT ${config.server.port} 🚀🚀`);
 });
