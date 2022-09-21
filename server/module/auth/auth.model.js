@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
+import config from "../../config";
+import bcrypt from "bcrypt";
 
 const schema = mongoose.Schema;
 
@@ -54,8 +56,8 @@ const userSchema = new schema(
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
 
-  const jwtToken = jwt.sign({ sub: user.id }, process.env.NODE_JWT_KEY, {
-    expiresIn: process.env.NODE_JWT_EXPIRATION,
+  const jwtToken = jwt.sign({ sub: user.id }, config.jwt.key, {
+    expiresIn: config.jwt.expiration,
   });
 
   user.tokens = [...user.tokens, { token: jwtToken }];
@@ -77,6 +79,40 @@ userSchema.methods.toJSON = function () {
 
   return userObj;
 };
+
+/**
+ * Get user details using email and password
+ * @param {*} email
+ * @param {*} password
+ * @returns user
+ */
+userSchema.statics.findByCredentials = async function (email, password) {
+  const user = await UserModel.findOne({ email });
+
+  if (!user) {
+    throw new Error("Unable to login");
+  }
+
+  const isMatched = await bcrypt.compare(password, user.password);
+
+  if (!isMatched) {
+    throw new Error("Unable to login");
+  }
+
+  return user;
+};
+
+/**
+ * Encrypt password
+ */
+userSchema.pre("save", async function (next) {
+  const user = this;
+
+  if (user.isModified("password")) {
+    user.password = await bcrypt.hash(user.password, 10);
+  }
+  next();
+});
 
 const UserModel = mongoose.model("user", userSchema);
 export { UserModel };
