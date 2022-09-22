@@ -1,45 +1,38 @@
 import mongoose from "mongoose";
-import debug from "debug";
-
-const log = debug("app");
+import config from "../config";
+import logger from "../services/logger";
 
 mongoose.Promise = global.Promise;
 
 mongoose.connection.on("connected", () => {
-  log("MongoDB Connection Established");
+  logger.info("🚀🚀 MongoDB Connection Established 🚀🚀");
 });
 
 mongoose.connection.on("reconnected", () => {
-  log("MongoDB Connection Reestablished");
+  logger.info("🚀🚀 MongoDB Connection Reestablished 🚀🚀");
 });
 
 mongoose.connection.on("disconnected", () => {
-  log("MongoDB Connection Disconnected");
+  logger.info("🚀🚀 MongoDB Connection Disconnected 🚀🚀");
 });
 
 mongoose.connection.on("close", () => {
-  log("MongoDB Connection Closed");
+  logger.info("🚀🚀 MongoDB Connection Closed 🚀🚀");
 });
 
 mongoose.connection.on("error", (error) => {
-  log("MongoDB ERROR: " + error);
+  logger.error("MongoDB ERROR: " + error);
   process.exit(1);
 });
 
-mongoose.set("debug", process.env.NODE_MONGO_DEBUG);
+mongoose.set("debug", config.database.debugEnabled);
 
 const connectMongo = async () => {
-  const dbOptions = {
-    autoIndex: false,
-    maxPoolSize: 10,
-    serverSelectionTimeoutMS: 5000,
-    socketTimeoutMS: 45000,
-    family: 4,
-  };
-  let connectionUri = process.env.NODE_DB_BASE_URL;
-  await mongoose.connect(connectionUri, dbOptions).catch((err) => {
-    Logger.log.fatal(`DATABASE - Error:${err}`);
-  });
+  await mongoose
+    .connect(config.database.connectionUrl, config.database.dbOptions)
+    .catch((err) => {
+      logger.error(`DATABASE - Error:${err}`);
+    });
 };
 
 export default connectMongo;

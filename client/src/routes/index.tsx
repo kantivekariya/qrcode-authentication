@@ -6,15 +6,16 @@ import SignUp from "../components/auth/SignUp";
 import Dashboard from "../components/dashboard/Dashboard";
 import UserProfile from "../components/dashboard/UserProfile";
 import { getLocalState } from "../utils/helpers";
+import { useAppSelector } from "../utils/hooks/dispatchHooks";
 import PrivateRoute from "./PrivateRoute";
 
 const RootRoutes = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     const cb = () => {
-      const isToken = getLocalState("access_token");
-      if (!isToken) {
+      if (!isAuthenticated) {
         navigate("/qr-code");
       }
     };
@@ -26,11 +27,10 @@ const RootRoutes = () => {
   }, []);
 
   useEffect(() => {
-    const isAuth = getLocalState("access_token");
-    if (isAuth) {
+    if (isAuthenticated) {
       navigate("/", { replace: true });
     }
-  }, [navigate]);
+  }, [navigate, isAuthenticated]);
 
   return (
     <Routes>

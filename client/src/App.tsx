@@ -5,6 +5,9 @@ import { Provider } from "react-redux";
 import RootRoutes from "./routes";
 import { persistStoreData, store } from "./reduce/store";
 import "./App.css";
+import { onLocalLogin } from "./reduce/action/auth/AuthAction";
+
+store.dispatch(onLocalLogin());
 
 function App() {
   return (

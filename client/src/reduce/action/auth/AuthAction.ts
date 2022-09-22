@@ -2,9 +2,14 @@ import jwt_decode from "jwt-decode";
 import AuthApiServices from "../../../services/auth-services/AuthApiServices";
 import { getLocalState, setLocalState } from "../../../utils/helpers";
 import {
+  authMeFailure,
+  authMeLoading,
+  authMeSuccess,
   loginUserFailure,
   loginUserLoading,
   loginUserSuccess,
+  logOutLoading,
+  logOutSuccess,
 } from "../../features/auth/authSlice";
 import {
   qrCodeFailure,
@@ -71,14 +76,27 @@ export const userSignUp = (apiData: SignUpIProps) => async (dispatch: any) => {
   }
 };
 
-/* user signup api's */
+/* get user profile api's */
 export const getUserProfile = () => async (dispatch: any) => {
-  dispatch(signUpLoading());
+  dispatch(authMeLoading());
   try {
-    // const res = await AuthApiServices.userSignUp();
-    // dispatch(signUpSuccess(res.data));
+    const res = await AuthApiServices.loginUserProfile();
+    dispatch(authMeSuccess(res.data));
   } catch (error) {
-    dispatch(signUpFailure(error as string));
+    dispatch(authMeFailure(error as string));
+    return Promise.reject(error);
+  }
+};
+
+/* user logout api's */
+export const userLogOut = () => async (dispatch: any) => {
+  dispatch(logOutLoading());
+  try {
+    const res = await AuthApiServices.userLogOut();
+    dispatch(logOutSuccess(res.data));
+    localStorage.clear();
+  } catch (error) {
+    dispatch(loginUserFailure(error as string));
     return Promise.reject(error);
   }
 };

@@ -1,16 +1,19 @@
 import jwt from "jsonwebtoken";
 import { UserModel } from "../module/auth/auth.model";
+import config from "../config";
+import httpStatus from "../utils/httpStatus";
 
 const auth = async (req, res, next) => {
   const token = req.header("authorization");
   if (token) {
     try {
-      const decoded = jwt.verify(token, process.env.NODE_JWT_KEY);
+      const decoded = jwt.verify(token, config.jwt.key);
       const user = await UserModel.findOne({
         _id: decoded.sub,
+        "tokens.token": token,
       });
-      if (!user?.token) {
-        return res.status(401).send({
+      if (!user) {
+        return res.status(httpStatus.UNAUTHORIZED).send({
           status: "ERROR",
           message: "Auth-Token is not valid",
         });
@@ -19,13 +22,13 @@ const auth = async (req, res, next) => {
       req.user = user;
       next();
     } catch (e) {
-      return res.status(401).send({
+      return res.status(httpStatus.UNAUTHORIZED).send({
         status: "ERROR",
         message: "Auth-Token is not valid",
       });
     }
   } else {
-    return res.status(401).send({
+    return res.status(httpStatus.UNAUTHORIZED).send({
       status: "ERROR",
       message: "Auth-Token not set in header",
     });

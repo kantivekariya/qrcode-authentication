@@ -4,6 +4,7 @@ import QRCode from "qrcode";
 import { UserModel } from "./auth.model";
 import httpStatus from "../../utils/httpStatus";
 import { qrCodeModel } from "./qrcode.model";
+import config from "../../config";
 
 const userController = {};
 
@@ -17,10 +18,6 @@ userController.register = async (req, res, next) => {
       });
     } else {
       const user = new UserModel(req.body);
-      if (req.body.password) {
-        user.hash = await bcrypt.hashSync(req.body.password, 10);
-      }
-      user.password = user.hash;
       await user.save();
       return res.status(httpStatus.CREATED).json({ data: { user } });
     }
@@ -36,23 +33,21 @@ userController.register = async (req, res, next) => {
 userController.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const user = await UserModel.findOne({ email: email });
-    if (user && bcrypt.compareSync(password, user.password)) {
-      const token = jwt.sign({ sub: user.id }, process.env.NODE_JWT_KEY, {
-        expiresIn: process.env.NODE_JWT_EXPIRATION,
-      });
-      user.token = token;
-      await user.save();
-      return res.status(httpStatus.OK).json({
-        message: "Auth successful",
-        token: token,
-      });
-    } else {
+
+    const user = await UserModel.findByCredentials(email, password);
+    const token = await user.generateAuthToken();
+    return res.status(httpStatus.OK).json({
+      message: "Auth successful",
+      token: token,
+      user,
+    });
+  } catch (e) {
+    if (e.message === "Unable to login") {
       return res.status(httpStatus.UNAUTHORIZED).json({
         message: "Auth failed!",
       });
     }
-  } catch (e) {
+
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       status: "ERROR",
       message: e.message,
@@ -142,13 +137,9 @@ userController.qrCode = async (req, res) => {
       [...Array(length)]
         .map(() => (~~(Math.random() * 36)).toString(36))
         .join("");
-    const dynamicToken = jwt.sign(
-      { sub: randomString(14) },
-      process.env.NODE_JWT_KEY,
-      {
-        expiresIn: process.env.NODE_JWT_EXPIRATION,
-      }
-    );
+    const dynamicToken = jwt.sign({ sub: randomString(14) }, config.jwt.key, {
+      expiresIn: config.jwt.expiration,
+    });
     const dynamicOrCode = await new qrCodeModel({ qrcode: dynamicToken });
     await dynamicOrCode.save();
     QRCode.toDataURL(dynamicToken, (err, url) => {
@@ -164,12 +155,12 @@ userController.qrCode = async (req, res) => {
 /* user logout */
 userController.logout = async (req, res) => {
   try {
-    req.user.deleteToken(req.token, (err, user) => {
-      if (err) return res.status(httpStatus.BAD_REQUEST).send(err);
-      return res
-        .status(httpStatus.OK)
-        .json({ message: "Logout Successfully!" });
-    });
+    req.user.tokens = req.user.tokens.filter(
+      (token) => token.token != req.token
+    );
+    await req.user.save();
+
+    return res.status(httpStatus.OK).json({ message: "Logout Successfully!" });
   } catch (e) {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       status: "ERROR",
@@ -181,21 +172,22 @@ userController.logout = async (req, res) => {
 /* verify token */
 userController.verifyQrcode = async (req, res) => {
   try {
-    const { userId, qrcodeToken } = req.body;
-    const userToken = await qrCodeModel.findOne({ qrcode: qrcodeToken });
-    if (userToken && userId) {
-      const token = jwt.sign({ sub: userId }, process.env.NODE_JWT_KEY, {
-        expiresIn: process.env.NODE_JWT_EXPIRATION,
-      });
+    const { qrCodeToken } = req.body;
+
+    const userToken = await qrCodeModel.findOne({ qrcode: qrCodeToken });
+
+    if (userToken) {
+      // TODO : create and send token to client-browser using socket
+      // const token = await req.user.generateAuthToken();
+
       return res.status(httpStatus.OK).json({
-        message: "Auth successful",
-        token: token,
-      });
-    } else {
-      return res.status(httpStatus.UNAUTHORIZED).json({
-        message: "Auth failed!",
+        message: "Successfully login on <device>",
+        status: "SUCCESS",
       });
     }
+    return res.status(httpStatus.BAD_REQUEST).json({
+      message: "QR code is invalid",
+    });
   } catch (e) {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       status: "ERROR",
