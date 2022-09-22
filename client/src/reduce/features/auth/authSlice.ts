@@ -17,6 +17,7 @@ const initialStates = {
 };
 
 let initialState = Object.assign(persistedState, initialStates) as AuthIProps;
+console.log("initialState", initialState);
 
 const authSlice = createSlice({
   name: "auth",

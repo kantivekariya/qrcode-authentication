@@ -12,10 +12,13 @@ import PrivateRoute from "./PrivateRoute";
 const RootRoutes = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
+  console.log("isAuthenticated", isAuthenticated);
+  
 
   useEffect(() => {
     const cb = () => {
-      if (!isAuthenticated) {
+      const isToken = getLocalState("access_token");
+      if (!isToken) {
         navigate("/qr-code");
       }
     };
@@ -30,7 +33,7 @@ const RootRoutes = () => {
     if (isAuthenticated) {
       navigate("/", { replace: true });
     }
-  }, [navigate, isAuthenticated]);
+  }, [navigate]);
 
   return (
     <Routes>
