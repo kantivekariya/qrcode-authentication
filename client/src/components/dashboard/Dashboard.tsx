@@ -1,10 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import { userLogOut } from "../../reduce/action/auth/AuthAction";
+import { useAppDispatch } from "../../utils/hooks/dispatchHooks";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
-  const onHandleLogout = () => {
-    localStorage.clear();
-    navigate("/login", { replace: true });
+  const dispatch = useAppDispatch();
+  const onHandleLogout = async () => {
+    await dispatch(userLogOut());
   };
   return (
     <>

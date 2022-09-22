@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { loadUserFromLocal } from "../../../utils/helpers";
 const persistedState = loadUserFromLocal();
-
 interface AuthIProps {
   userInfo: any;
   isAuthenticated: boolean;
@@ -10,20 +9,18 @@ interface AuthIProps {
   error?: string;
 }
 
-const initialState = {
+const initialStates = {
   isLoading: true,
   userInfo: {},
   error: "",
   status: "",
-} as AuthIProps;
+};
 
-let initObjects = Object.assign(persistedState, initialState);
-
-console.log("persistedState", initObjects);
+let initialState = Object.assign(persistedState, initialStates) as AuthIProps;
 
 const authSlice = createSlice({
   name: "auth",
-  initObjects,
+  initialState,
   reducers: {
     loginUserLoading(state) {
       state.status = "Pending";
@@ -32,8 +29,36 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.status = "Success";
       state.userInfo = action.payload;
+      state.isAuthenticated = true;
     },
     loginUserFailure(state, action: PayloadAction<string>) {
+      state.isLoading = false;
+      state.status = "Failed";
+      state.error = action.payload;
+    },
+    authMeLoading(state) {
+      state.status = "Pending";
+    },
+    authMeSuccess(state, action: PayloadAction<{}>) {
+      state.isLoading = false;
+      state.status = "Success";
+      state.userInfo = action.payload;
+      state.isAuthenticated = true;
+    },
+    authMeFailure(state, action: PayloadAction<string>) {
+      state.isLoading = false;
+      state.status = "Failed";
+      state.error = action.payload;
+    },
+    logOutLoading(state) {
+      state.status = "Pending";
+    },
+    logOutSuccess(state, action: PayloadAction<string>) {
+      state.isLoading = false;
+      state.status = "Success";
+      state.isAuthenticated = false;
+    },
+    logOutFailure(state, action: PayloadAction<string>) {
       state.isLoading = false;
       state.status = "Failed";
       state.error = action.payload;
@@ -41,7 +66,16 @@ const authSlice = createSlice({
   },
 });
 
-export const { loginUserLoading, loginUserSuccess, loginUserFailure } =
-  authSlice.actions;
+export const {
+  loginUserLoading,
+  loginUserSuccess,
+  loginUserFailure,
+  authMeLoading,
+  authMeSuccess,
+  authMeFailure,
+  logOutLoading,
+  logOutSuccess,
+  logOutFailure,
+} = authSlice.actions;
 
 export default authSlice.reducer;
