@@ -8,5 +8,7 @@ const AuthApiServices = {
     apiService.postData(AUTH_URLS.LOGIN_URL, apiData),
   userSignUp: (apiData: SignUpIProps) =>
     apiService.postData(AUTH_URLS.SIGNUP_URL, apiData),
+  loginUserProfile: () => apiService.getData(AUTH_URLS.AUTH_ME_URL),
+  userLogOut: () => apiService.getData(AUTH_URLS.LOGOUT_URL),
 };
 export default AuthApiServices;

@@ -4,4 +4,6 @@ export const AUTH_URLS = {
   QR_CODE_URL: `${BASE_URL}auth/qr-code`,
   LOGIN_URL: `${BASE_URL}auth/login`,
   SIGNUP_URL: `${BASE_URL}auth/register`,
+  AUTH_ME_URL: `${BASE_URL}auth/me`,
+  LOGOUT_URL: `${BASE_URL}auth/logout`,
 };
