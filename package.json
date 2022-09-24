@@ -1,0 +1,17 @@
+{
+  "name": "qrcode-authentication",
+  "private": true,
+  "version": "1.0.0",
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  },
+  "scripts": {
+    "install-client": "cd ./packages/client && npm install",
+    "install-server": "cd ./packages/server && npm install",
+    "postinstall": "npm run install-client && npm run install-server",
+    "build": "cd ./packages/client && npm run build",
+    "start": "cd ./packages/server && npm run dev",
+    "dev": "lerna run dev",
+    "clean": "lerna clean"
+  }
+}

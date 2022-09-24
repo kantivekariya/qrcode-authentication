@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { LoginIProps, userLogin } from "../../reduce/action/auth/AuthAction";
 import { useAppDispatch } from "../../utils/hooks/dispatchHooks";
 import { getLocalState } from "../../utils/helpers";
+import ReactGA from "react-ga4";
 
 const loginSchema = Yup.object()
   .shape({
@@ -21,6 +22,7 @@ const Login = () => {
   const dispatch = useAppDispatch();
 
   const onHandleSubmit = async (formData: LoginIProps) => {
+    ReactGA.event("Login");
     await dispatch(userLogin(formData));
     await navigate("/");
   };

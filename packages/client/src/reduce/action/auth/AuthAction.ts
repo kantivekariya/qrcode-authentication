@@ -1,4 +1,5 @@
 import jwt_decode from "jwt-decode";
+import { toast } from "react-toastify";
 import AuthApiServices from "../../../services/auth-services/AuthApiServices";
 import { getLocalState, setLocalState } from "../../../utils/helpers";
 import {
@@ -58,6 +59,7 @@ export const userLogin = (apiData: LoginIProps) => async (dispatch: any) => {
     // @ts-ignore
     saveTokens({ access_token: res?.data?.token, expires_in: decoded.exp });
     dispatch(loginUserSuccess(res.data));
+    toast.success(res?.data?.message);
   } catch (error) {
     dispatch(loginUserFailure(error as string));
     return Promise.reject(error);

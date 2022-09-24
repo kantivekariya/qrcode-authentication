@@ -179,7 +179,6 @@ userController.verifyQrcode = async (req, res) => {
     if (userToken) {
       // TODO : create and send token to client-browser using socket
       // const token = await req.user.generateAuthToken();
-
       return res.status(httpStatus.OK).json({
         message: "Successfully login on <device>",
         status: "SUCCESS",
