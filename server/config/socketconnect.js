@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import logger from "../services/logger";
 
 const connectSocketIo = async (server) => {
   const io = new Server(server, { cors: { origin: "*" } });
