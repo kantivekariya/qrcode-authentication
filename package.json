@@ -6,9 +6,9 @@
     "lerna": "^4.0.0"
   },
   "scripts": {
-    "install-frontend": "cd ./packages/client && npm install",
-    "install-backend": "cd ./packages/server && npm install",
-    "postinstall": "npm run install-frontend && npm run install-backend",
+    "install-client": "cd ./packages/client && npm install",
+    "install-server": "cd ./packages/server && npm install",
+    "postinstall": "npm run install-client && npm run install-server",
     "build": "cd ./packages/client && npm run build",
     "start": "cd ./packages/server && npm run dev",
     "dev": "lerna run dev",
