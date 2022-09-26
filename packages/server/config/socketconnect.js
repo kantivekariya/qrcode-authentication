@@ -3,6 +3,13 @@ import logger from "../services/logger";
 
 let io;
 
+/*
+	Socket event names
+*/
+const socketEvents = {
+  AUTH_TOKEN: "authToken",
+};
+
 const connectSocketIo = async (server) => {
   io = new Server(server, { cors: { origin: "*" } });
   io.on("connection", (socket) => {
@@ -31,4 +38,4 @@ const emitToSpecificSocket = (socketId, eventName, socketPayload) => {
   logger.info("Socket : emitToSpecificSocket : event sent");
 };
 
-export { connectSocketIo, emitToSpecificSocket };
+export { connectSocketIo, emitToSpecificSocket, socketEvents };

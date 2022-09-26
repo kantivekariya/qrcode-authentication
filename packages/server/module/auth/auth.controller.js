@@ -3,8 +3,9 @@ import jwt from "jsonwebtoken";
 import QRCode from "qrcode";
 import { UserModel } from "./auth.model";
 import httpStatus from "../../utils/httpStatus";
-import { qrCodeModel } from "./qrcode.model";
+import { QrCodeModel } from "./qrcode.model";
 import config from "../../config";
+import { emitToSpecificSocket, socketEvents } from "../../config/socketconnect";
 
 const userController = {};
 
@@ -133,6 +134,8 @@ userController.delete = async (req, res) => {
 /* generate dynamic qr code */
 userController.qrCode = async (req, res) => {
   try {
+    const { socketId } = req.body;
+
     const randomString = (length) =>
       [...Array(length)]
         .map(() => (~~(Math.random() * 36)).toString(36))
@@ -140,7 +143,10 @@ userController.qrCode = async (req, res) => {
     const dynamicToken = jwt.sign({ sub: randomString(14) }, config.jwt.key, {
       expiresIn: config.jwt.expiration,
     });
-    const dynamicOrCode = await new qrCodeModel({ qrcode: dynamicToken });
+    const dynamicOrCode = await new QrCodeModel({
+      qrcode: dynamicToken,
+      socketId,
+    });
     await dynamicOrCode.save();
     QRCode.toDataURL(dynamicToken, (err, url) => {
       res.send({
@@ -174,13 +180,18 @@ userController.verifyQrcode = async (req, res) => {
   try {
     const { qrCodeToken } = req.body;
 
-    const userToken = await qrCodeModel.findOne({ qrcode: qrCodeToken });
+    const userToken = await QrCodeModel.findOne({ qrcode: qrCodeToken });
 
     if (userToken) {
       // TODO : create and send token to client-browser using socket
-      // const token = await req.user.generateAuthToken();
+      const token = await req.user.generateAuthToken();
+
+      emitToSpecificSocket(userToken.socketId, socketEvents.AUTH_TOKEN, {
+        token,
+      });
+
       return res.status(httpStatus.OK).json({
-        message: "Successfully login on <device>",
+        message: "Successfully login",
         status: "SUCCESS",
       });
     }
