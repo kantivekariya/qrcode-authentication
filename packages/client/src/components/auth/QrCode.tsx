@@ -1,7 +1,11 @@
-import { memo, useEffect } from "react";
+import { memo, SetStateAction, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Loader from "../../common/Loader";
-import { generateQrCode } from "../../reduce/action/auth/AuthAction";
+import {
+  generateQrCode,
+  userLoginWithQRcode,
+} from "../../reduce/action/auth/AuthAction";
+import socket from "../../services/socketConnection";
 import {
   useAppDispatch,
   useAppSelector,
@@ -9,10 +13,24 @@ import {
 
 const QrCode = () => {
   const dispatch = useAppDispatch();
+  const [socketId, setSocketId] = useState<any>("");
   const { qrCode, isLoading } = useAppSelector((state) => state.qrCode);
 
   useEffect(() => {
-    dispatch(generateQrCode());
+    const getUsers = async () => {
+      socket.on("connect", () => {
+        setSocketId(socket.id);
+      });
+      if (socketId) await dispatch(generateQrCode({ socketId }));
+    };
+    getUsers();
+  }, [dispatch, socketId]);
+
+  useEffect(() => {
+    socket.on("authToken", (payload) => {
+      console.log(payload?.token);
+      dispatch(userLoginWithQRcode(payload?.token));
+    });
   }, [dispatch]);
 
   return (
