@@ -7,7 +7,11 @@ const qrCodeSchema = new schema({
     type: String,
     required: true,
   },
+  socketId: {
+    type: String,
+    required: true,
+  },
 });
 
-const qrCodeModel = mongoose.model("qrcode", qrCodeSchema);
-export { qrCodeModel };
+const QrCodeModel = mongoose.model("qrcode", qrCodeSchema);
+export { QrCodeModel };
