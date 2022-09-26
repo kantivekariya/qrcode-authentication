@@ -81,6 +81,7 @@ export const userLoginWithQRcode = (token:string) => async (dispatch: any) => {
     // @ts-ignore
     saveTokens({ access_token: token, expires_in: decoded.exp });
     dispatch(loginUserWithQRcodeSuccess());
+    dispatch(onLocalLogin());
   } catch (error) {
     dispatch(loginUserWithQRcodeFailure(error as string));
     return Promise.reject(error);
