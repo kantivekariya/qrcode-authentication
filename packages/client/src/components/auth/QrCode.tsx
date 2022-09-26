@@ -1,7 +1,11 @@
 import { memo, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../common/Loader";
-import { generateQrCode } from "../../reduce/action/auth/AuthAction";
+import {
+  generateQrCode,
+  userLoginWithQRcode,
+} from "../../reduce/action/auth/AuthAction";
+import socket from "../../services/socketConnection";
 import {
   useAppDispatch,
   useAppSelector,
@@ -9,11 +13,25 @@ import {
 
 const QrCode = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { qrCode, isLoading } = useAppSelector((state) => state.qrCode);
 
   useEffect(() => {
-    dispatch(generateQrCode());
-  }, [dispatch]);
+    const getUsers = async () => {
+      socket.on("connect", () => {
+        dispatch(generateQrCode({ socketId: socket.id }));
+      });
+    };
+    getUsers();
+  }, []);
+
+  useEffect(() => {
+    socket.on("authToken", (payload) => {
+      console.log(payload?.token);
+      dispatch(userLoginWithQRcode(payload?.token));
+      navigate("/");
+    });
+  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
