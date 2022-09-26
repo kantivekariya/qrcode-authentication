@@ -6,7 +6,7 @@ import mainRouter from "./routes";
 import connectMongo from "./config/mongoconnect";
 import config from "./config";
 import logger from "./services/logger";
-import connectSocketIo from "./config/socketconnect";
+import { connectSocketIo } from "./config/socketconnect";
 
 const app = express();
 
