@@ -37,6 +37,19 @@ const authSlice = createSlice({
       state.status = "Failed";
       state.error = action.payload;
     },
+    loginUserWithQRcodeLoading(state) {
+      state.status = "Pending";
+    },
+    loginUserWithQRcodeSuccess(state) {
+      state.isLoading = false;
+      state.status = "Success";
+      state.isAuthenticated = true;
+    },
+    loginUserWithQRcodeFailure(state, action: PayloadAction<string>) {
+      state.isLoading = false;
+      state.status = "Failed";
+      state.error = action.payload;
+    },
     authMeLoading(state) {
       state.status = "Pending";
     },
@@ -71,6 +84,9 @@ export const {
   loginUserLoading,
   loginUserSuccess,
   loginUserFailure,
+  loginUserWithQRcodeLoading,
+  loginUserWithQRcodeSuccess,
+  loginUserWithQRcodeFailure,
   authMeLoading,
   authMeSuccess,
   authMeFailure,

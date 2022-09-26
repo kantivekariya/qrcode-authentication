@@ -9,6 +9,9 @@ import {
   loginUserFailure,
   loginUserLoading,
   loginUserSuccess,
+  loginUserWithQRcodeFailure,
+  loginUserWithQRcodeLoading,
+  loginUserWithQRcodeSuccess,
   logOutLoading,
   logOutSuccess,
 } from "../../features/auth/authSlice";
@@ -38,11 +41,15 @@ export interface SignUpIProps {
   password: string;
 }
 
+export interface SocketIProps {
+  socketId: string;
+}
+
 /* generate qrCode api's */
-export const generateQrCode = () => async (dispatch: any) => {
+export const generateQrCode = (socketId: SocketIProps) => async (dispatch: any) => {
   dispatch(qrCodeLoading());
   try {
-    const res = await AuthApiServices.generateQrCode();
+    const res = await AuthApiServices.generateQrCode(socketId);
     dispatch(qrCodeSuccess(res.data));
   } catch (error) {
     dispatch(qrCodeFailure(error as string));
@@ -62,6 +69,20 @@ export const userLogin = (apiData: LoginIProps) => async (dispatch: any) => {
     toast.success(res?.data?.message);
   } catch (error) {
     dispatch(loginUserFailure(error as string));
+    return Promise.reject(error);
+  }
+};
+
+/* user login api's */
+export const userLoginWithQRcode = (token:string) => async (dispatch: any) => {
+  dispatch(loginUserWithQRcodeLoading());
+  try {
+    const decoded = jwt_decode(token);
+    // @ts-ignore
+    saveTokens({ access_token: token, expires_in: decoded.exp });
+    dispatch(loginUserWithQRcodeSuccess());
+  } catch (error) {
+    dispatch(loginUserWithQRcodeFailure(error as string));
     return Promise.reject(error);
   }
 };
