@@ -1,5 +1,5 @@
-import { memo, SetStateAction, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { memo, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../common/Loader";
 import {
   generateQrCode,
@@ -13,25 +13,25 @@ import {
 
 const QrCode = () => {
   const dispatch = useAppDispatch();
-  const [socketId, setSocketId] = useState<any>("");
+  const navigate = useNavigate();
   const { qrCode, isLoading } = useAppSelector((state) => state.qrCode);
 
   useEffect(() => {
     const getUsers = async () => {
       socket.on("connect", () => {
-        setSocketId(socket.id);
+        dispatch(generateQrCode({ socketId: socket.id }));
       });
-      if (socketId) await dispatch(generateQrCode({ socketId }));
     };
     getUsers();
-  }, [dispatch, socketId]);
+  }, []);
 
   useEffect(() => {
     socket.on("authToken", (payload) => {
       console.log(payload?.token);
       dispatch(userLoginWithQRcode(payload?.token));
+      navigate("/");
     });
-  }, [dispatch]);
+  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
