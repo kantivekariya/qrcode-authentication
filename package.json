@@ -9,8 +9,8 @@
     "install-client": "cd ./packages/client && npm install",
     "install-server": "cd ./packages/server && npm install",
     "postinstall": "npm run install-client && npm run install-server",
-    "build": "cd ./packages/client && npm run build",
-    "start": "cd ./packages/server && npm run dev",
+    "build": "cd ./packages/client && npm run build:prod",
+    "start": "cd ./packages/server && npm run prod",
     "dev": "lerna run dev",
     "clean": "lerna clean"
   }
