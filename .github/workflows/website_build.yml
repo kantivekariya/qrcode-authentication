@@ -3,7 +3,7 @@ name: Build and upload website
 on:
   push:
     branches:
-    - master
+    - feature/client-authentication
 
 jobs:
   deploy:
