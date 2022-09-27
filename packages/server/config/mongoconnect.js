@@ -26,7 +26,7 @@ mongoose.connection.on("error", (error) => {
 });
 
 mongoose.set("debug", config.database.debugEnabled);
-
+console.log("config.database.connectionUrl", config.database.connectionUrl);
 const connectMongo = async () => {
   await mongoose
     .connect(config.database.connectionUrl, config.database.dbOptions)
