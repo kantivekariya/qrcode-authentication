@@ -1,11 +1,10 @@
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import QRCode from "qrcode";
-import { UserModel } from "./auth.model";
-import httpStatus from "../../utils/httpStatus";
-import { QrCodeModel } from "./qrcode.model";
-import config from "../../config";
-import { emitToSpecificSocket, socketEvents } from "../../config/socketconnect";
+import { UserModel } from "./auth.model.js";
+import httpStatus from "../../utils/httpStatus.js";
+import { QrCodeModel } from "./qrcode.model.js";
+import config from "../../config.js";
+import { emitToSpecificSocket, socketEvents } from "../../config/socketconnect.js";
 
 const userController = {};
 

@@ -5,10 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "server": "cross-env DEBUG=app nodemon --es-module-specifier-resolution=node app.js",
-    "dev": "env-cmd -e development cross-env npm-run-all server",
-    "prod": "env-cmd -e production cross-env npm-run-all --es-module-specifier-resolution=node app.js",
-    "staging": "env-cmd -e staging cross-env npm-run-all server",
+    "dev": "env-cmd -e development nodemon --experimental-specifier-resolution=node app.js",
+    "prod": "env-cmd -e production node app.js",
+    "staging": "env-cmd -e staging --experimental-specifier-resolution=node app.js",
     "format": "prettier --write \"./**/*.js\""
   },
   "keywords": [],
@@ -18,7 +17,6 @@
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.2",
     "cors": "^2.8.5",
-    "cross-env": "^7.0.3",
     "crypto-js": "^4.1.1",
     "env-cmd": "^10.1.0",
     "express": "^4.17.3",

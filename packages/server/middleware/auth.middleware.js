@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
-import { UserModel } from "../module/auth/auth.model";
-import config from "../config";
-import httpStatus from "../utils/httpStatus";
+import { UserModel } from "../module/auth/auth.model.js";
+import config from "../config.js";
+import httpStatus from "../utils/httpStatus.js";
 
 const auth = async (req, res, next) => {
   const token = req.header("authorization");

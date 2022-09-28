@@ -4,11 +4,11 @@ import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import morgan from "morgan";
 import cors from "cors";
-import mainRouter from "./routes";
-import connectMongo from "./config/mongoconnect";
-import config from "./config";
-import logger from "./services/logger";
-import { connectSocketIo } from "./config/socketconnect";
+import mainRouter from "./routes/index.js";
+import connectMongo from "./config/mongoconnect.js";
+import config from "./config.js";
+import logger from "./services/logger.js";
+import { connectSocketIo } from "./config/socketconnect.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

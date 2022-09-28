@@ -1,7 +1,7 @@
 import express from "express";
-import userController from "./auth.controller";
-import { asyncWrapper } from "../../utils/asyncWrapper";
-import auth from "../../middleware/auth.middleware";
+import userController from "./auth.controller.js";
+import { asyncWrapper } from "../../utils/asyncWrapper.js";
+import auth from "../../middleware/auth.middleware.js";
 
 const authRoutes = express.Router();
 

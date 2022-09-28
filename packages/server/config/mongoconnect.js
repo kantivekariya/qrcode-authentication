@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import config from "../config";
-import logger from "../services/logger";
+import config from "../config.js";
+import logger from "../services/logger.js";
 
 mongoose.Promise = global.Promise;
 
