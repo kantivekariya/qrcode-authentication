@@ -7,7 +7,7 @@
   "scripts": {
     "server": "cross-env DEBUG=app nodemon --es-module-specifier-resolution=node app.js",
     "dev": "env-cmd -e development cross-env npm-run-all server",
-    "prod": "env-cmd -e production cross-env npm-run-all server",
+    "prod": "env-cmd -e production cross-env npm-run-all --es-module-specifier-resolution=node app.js",
     "staging": "env-cmd -e staging cross-env npm-run-all server",
     "format": "prettier --write \"./**/*.js\""
   },
@@ -32,7 +32,6 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.15",
-    "prettier": "^2.5.1",
-    "rimraf": "^3.0.2"
+    "prettier": "^2.5.1"
   }
 }
