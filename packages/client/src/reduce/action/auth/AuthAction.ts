@@ -66,6 +66,7 @@ export const userLogin = (apiData: LoginIProps) => async (dispatch: any) => {
     // @ts-ignore
     saveTokens({ access_token: res?.data?.token, expires_in: decoded.exp });
     dispatch(loginUserSuccess(res.data));
+    dispatch(onLocalLogin());
     toast.success(res?.data?.message);
   } catch (error) {
     dispatch(loginUserFailure(error as string));
