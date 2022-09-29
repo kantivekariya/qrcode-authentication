@@ -147,15 +147,15 @@ userController.qrCode = async (req, res) => {
   try {
     const { socketId } = req.body;
     const uniqueKey = uuidv4();
-    console.log("uniqueKey", uniqueKey);
-    const dynamicOrCode = await new QrCodeModel({
+    await QrCodeModel.deleteMany();
+    const dynamicQRCode = await new QrCodeModel({
       qrcode: uniqueKey,
       socketId,
     });
-    await dynamicOrCode.save();
+    await dynamicQRCode.save();
     QRCode.toDataURL(
       uniqueKey,
-      { rendererOpts: { quality: 5 }, version:8 },
+      { rendererOpts: { quality: 5 }, version: 8 },
       (err, url) => {
         res.send({
           qrCode: url,
