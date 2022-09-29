@@ -27,11 +27,12 @@ const QrCode = () => {
 
   useEffect(() => {
     socket.on("authToken", (payload) => {
-      console.log(payload?.token);
       dispatch(userLoginWithQRcode(payload?.token));
       navigate("/");
     });
   }, []);
+
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
