@@ -1,10 +1,12 @@
-import jwt from "jsonwebtoken";
 import QRCode from "qrcode";
+import { v4 as uuidv4 } from "uuid";
 import { UserModel } from "./auth.model.js";
 import httpStatus from "../../utils/httpStatus.js";
 import { QrCodeModel } from "./qrcode.model.js";
-import config from "../../config.js";
-import { emitToSpecificSocket, socketEvents } from "../../config/socketconnect.js";
+import {
+  emitToSpecificSocket,
+  socketEvents,
+} from "../../config/socketconnect.js";
 
 const userController = {};
 
@@ -14,7 +16,8 @@ userController.register = async (req, res, next) => {
     const isExistingUser = await UserModel.findOne({ email: req.body.email });
     if (isExistingUser) {
       return res.status(httpStatus.CONFLICT).json({
-        message: "Mail Already Exists!",
+        message: "Email Already Exists!",
+        status: "SUCCESS",
       });
     } else {
       const user = new UserModel(req.body);
@@ -38,6 +41,7 @@ userController.login = async (req, res, next) => {
     const token = await user.generateAuthToken();
     return res.status(httpStatus.OK).json({
       message: "Auth successful",
+      status: "SUCCESS",
       token: token,
       user,
     });
@@ -45,6 +49,7 @@ userController.login = async (req, res, next) => {
     if (e.message === "Unable to login") {
       return res.status(httpStatus.UNAUTHORIZED).json({
         message: "Auth failed!",
+        status: "ERROR",
       });
     }
 
@@ -88,7 +93,7 @@ userController.findOne = async (req, res) => {
     if (!user) {
       return res
         .status(httpStatus.BAD_REQUEST)
-        .json({ message: "User not found" });
+        .json({ message: "User not found", status: "ERROR" });
     }
     return res.json(user);
   } catch (error) {
@@ -105,11 +110,15 @@ userController.update = async (req, res) => {
     if (!user) {
       return res
         .status(httpStatus.BAD_REQUEST)
-        .json({ message: "User not found" });
+        .json({ message: "User not found", status: "ERROR" });
     }
     Object.assign(user, req.body);
     await user.save();
-    return res.json(user);
+    return res.json({
+      message: "User update successfully!",
+      status: "SUCCESS",
+      user,
+    });
   } catch (error) {
     return res.status(500).json({ error: error.toString() });
   }
@@ -122,9 +131,12 @@ userController.delete = async (req, res) => {
     if (!user) {
       return res
         .status(httpStatus.BAD_REQUEST)
-        .json({ message: "User not found" });
+        .json({ message: "User not found", status: "ERROR" });
     }
-    return res.json({ message: "User deleted successfully!" });
+    return res.json({
+      message: "User deleted successfully!",
+      status: "SUCCESS",
+    });
   } catch (error) {
     return res.status(500).json({ error: error.toString() });
   }
@@ -134,24 +146,22 @@ userController.delete = async (req, res) => {
 userController.qrCode = async (req, res) => {
   try {
     const { socketId } = req.body;
-
-    const randomString = (length) =>
-      [...Array(length)]
-        .map(() => (~~(Math.random() * 36)).toString(36))
-        .join("");
-    const dynamicToken = jwt.sign({ sub: randomString(14) }, config.jwt.key, {
-      expiresIn: config.jwt.expiration,
-    });
+    const uniqueKey = uuidv4();
+    console.log("uniqueKey", uniqueKey);
     const dynamicOrCode = await new QrCodeModel({
-      qrcode: dynamicToken,
+      qrcode: uniqueKey,
       socketId,
     });
     await dynamicOrCode.save();
-    QRCode.toDataURL(dynamicToken, (err, url) => {
-      res.send({
-        qrCode: url,
-      });
-    });
+    QRCode.toDataURL(
+      uniqueKey,
+      { rendererOpts: { quality: 5 }, version:8 },
+      (err, url) => {
+        res.send({
+          qrCode: url,
+        });
+      }
+    );
   } catch (error) {
     return res.status(500).json({ error: error.toString() });
   }
