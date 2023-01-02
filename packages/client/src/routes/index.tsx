@@ -6,8 +6,10 @@ import QrCode from "../components/auth/QrCode";
 import SignUp from "../components/auth/SignUp";
 import HomeLayout from "../components/layouts/HomeLayout";
 import Dashboard from "../pages/dashboard/Dashboard";
+import UserList from "../pages/user-list/UserList";
 import UserProfile from "../pages/user-profile/UserProfile";
 import { getLocalState } from "../utils/helpers";
+import { useAppSelector } from "../utils/hooks/dispatchHooks";
 import PrivateRoute from "./PrivateRoute";
 
 const RootRoutes = () => {
@@ -29,14 +31,15 @@ const RootRoutes = () => {
 
   return (
     <Routes>
-      <Route element={<HomeLayout />}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/qr-code" element={<QrCode />} />
-        <Route path="/register" element={<SignUp />} />
-      </Route>
+      <Route path="/login" element={<Login />} />
+      <Route path="/qr-code" element={<QrCode />} />
+      <Route path="/register" element={<SignUp />} />
       <Route path="/" element={<PrivateRoute />}>
-        <Route index element={<Dashboard />} />
-        <Route path="user-profile" element={<UserProfile />} />
+        <Route path="/" element={<HomeLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="profile" element={<UserProfile />} />
+          <Route path="user-list" element={<UserList />} />
+        </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

@@ -1,5 +1,5 @@
 import { memo, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Loader from "../../common/Loader";
 import {
   generateQrCode,
@@ -14,6 +14,7 @@ import {
 const QrCode = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
   const { qrCode, isLoading } = useAppSelector((state) => state.qrCode);
 
   useEffect(() => {
@@ -32,7 +33,9 @@ const QrCode = () => {
     });
   }, []);
 
-  
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">

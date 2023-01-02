@@ -1,14 +1,13 @@
-import { Navigate, Outlet } from "react-router";
-import { useAppSelector } from "../../utils/hooks/dispatchHooks";
+import { Outlet } from "react-router";
+import SideBar from "../../common/SideBar";
 
 const HomeLayout = () => {
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
-  if (isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
   return (
-    <div>
-      <Outlet />
+    <div className="min-h-screen bg-blue-gray-50/50">
+      <SideBar />
+      <div className="p-4 xl:ml-80">
+        <Outlet />
+      </div>
     </div>
   );
 };
